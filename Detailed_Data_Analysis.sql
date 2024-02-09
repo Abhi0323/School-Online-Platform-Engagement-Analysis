@@ -1,5 +1,5 @@
--- 1.a Trying to find out total overall login percent by calculating present by total entries.
--- Answer: While following this approach I recieved 0 schools having overall teachers login percent more than 60%
+-- 1. Top 5 schools with overall teachers’ login% > 60% .
+
 SELECT 
     school_name,
     (SUM(CASE WHEN is_present = TRUE THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS login_percentage
@@ -12,6 +12,8 @@ HAVING
 ORDER BY 
     login_percentage DESC
 LIMIT 5;
+
+
 
 -- 2. Teachers Login day over day change in percentage across all schools.
 
@@ -39,7 +41,9 @@ FROM
 ORDER BY 
     school_name, record_date;
 
--- 3. If each billable student pays 500$/Month, what’s the revenue generated per school
+
+
+-- 3. If each billable student pays 500$/Month, then the revenue generated per school.
 
 SELECT 
     SCHOOL_NAME,
@@ -53,7 +57,9 @@ GROUP BY
     SCHOOL_NAME;
 
 
--- 4. Find the number of teachers per school who logged in 3 consecutive days
+
+
+-- 4. Number of teachers per school who logged in 3 consecutive days
 
 WITH TeacherAttendance AS (
     SELECT
@@ -90,7 +96,9 @@ GROUP BY
 ORDER BY teachers_with_consecutive_logins DESC;
 
 
---5. Find the weekly average for student login activity per school 
+
+
+--5. Weekly average student login activity per school 
 
 WITH WeeklyLoginCount AS (
     SELECT 
@@ -121,90 +129,3 @@ GROUP BY
     school_name
 ORDER BY 
     school_name;
-
--- Tried different logics for the 1st question, because of not receiving any schools with more than 60% overall login%.
-
---1.b Now I am assuming if the teachers last date is true then they might be on a leave for the remaining days. 
----So, I am not considering the entries showing false for a teacher after their last login date is true.
---Answer: For this approach I figured out 
---1. ABU BHABI_1706 had 66.6 Login Percentage
---2. ABU BHABI_377 had 64.8 Login Percentage
---3. ABU BHABI_1530 had 63.4 Login Percentage
-
-WITH LastLoginDate AS (
-    SELECT 
-        teacher_id,
-        MAX(record_date) AS last_login_date
-    FROM 
-        TeacherActivity
-    WHERE 
-        is_last_login = TRUE
-    GROUP BY 
-        teacher_id
-)
-SELECT 
-    ta.school_name,
-    (SUM(CASE WHEN ta.is_present = TRUE THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS login_percentage
-FROM 
-    TeacherActivity ta
-JOIN 
-    LastLoginDate lld ON ta.teacher_id = lld.teacher_id
-WHERE 
-    ta.record_date <= lld.last_login_date
-GROUP BY 
-    ta.school_name
-HAVING 
-    (SUM(CASE WHEN ta.is_present = TRUE THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) > 60
-ORDER BY 
-    login_percentage DESC
-LIMIT 5;
-
-
---1.c Now I am assuming that if the teachers start date is after a few days of school start date they might be a new hire or they have joined late, so I am excluding the entires prior to the first start date.
---Answer: ABU BHABI_1706 had 65.9 Login Percentage
-
-WITH LastLoginDate AS (
-    SELECT 
-        teacher_id,
-        MAX(record_date) AS last_login_date,
-        MIN(teacher_first_login_date) AS first_login_date  
-    FROM 
-        TeacherActivity
-    WHERE 
-        is_last_login = TRUE OR teacher_first_login_date IS NOT NULL  
-    GROUP BY 
-        teacher_id
-)
-SELECT 
-    ta.school_name,
-    (SUM(CASE WHEN ta.is_present = TRUE THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS login_percentage
-FROM 
-    TeacherActivity ta
-JOIN 
-    LastLoginDate lld ON ta.teacher_id = lld.teacher_id
-WHERE 
-    ta.record_date BETWEEN lld.first_login_date AND lld.last_login_date 
-GROUP BY 
-    ta.school_name
-HAVING 
-    login_percentage > 60
-ORDER BY 
-    login_percentage DESC
-LIMIT 5;
-
--- 1.d Tried to exclude teacher_first_login_date is null assuming teachers who have not at all logged in.
-
-SELECT 
-    school_name,
-    (SUM(CASE WHEN is_present = TRUE THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS login_percentage
-FROM 
-    TeacherActivity
-WHERE 
-    teacher_first_login_date IS NOT NULL  
-GROUP BY 
-    school_name
-HAVING 
-    (SUM(CASE WHEN is_present = TRUE THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) > 60
-ORDER BY 
-    login_percentage DESC
-LIMIT 5;
