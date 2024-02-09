@@ -19,6 +19,9 @@ Each query was meticulously designed to handle the complexities of the data, ens
 
 **Power BI Dashboard**
 
+![Dashboard_F](https://github.com/Abhi0323/School-Online-Platform-Engagement-Analysis/assets/112967999/cfd50d0a-41b8-4d94-a54d-983c704280a9)
+
+
 To translate these insights into actionable intelligence, a Power BI dashboard was developed. It features:
 
 Interactive filters for selecting specific schools and time frames.
