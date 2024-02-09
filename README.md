@@ -1,5 +1,7 @@
 ***Online School Platform Engagement Metrics***
 
+![Dashboard_F](https://github.com/Abhi0323/School-Online-Platform-Engagement-Analysis/assets/112967999/cfd50d0a-41b8-4d94-a54d-983c704280a9)
+
 In the age of digital learning, understanding how students and teachers engage with online educational platforms is critical. The "Online School Platform Engagement Metrics" project delves deep into the heart of this interaction by analyzing a comprehensive dataset from a school's online portal. Through meticulous SQL querying, the project extracts nuanced insights into login frequencies, participation rates, and activity patterns.
 
 
@@ -18,9 +20,6 @@ Compare activity across grades and schools to identify trends and outliers.
 Each query was meticulously designed to handle the complexities of the data, ensuring accurate and insightful results.
 
 **Power BI Dashboard**
-
-![Dashboard_F](https://github.com/Abhi0323/School-Online-Platform-Engagement-Analysis/assets/112967999/cfd50d0a-41b8-4d94-a54d-983c704280a9)
-
 
 To translate these insights into actionable intelligence, a Power BI dashboard was developed. It features:
 
